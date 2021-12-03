@@ -20,5 +20,8 @@ public class TerrainSquitch_Editor : Editor
 
         if (GUILayout.Button("Set Elevation"))
             squitch.SetElevation();
+
+        if (GUILayout.Button("Single Room"))
+            squitch.SingleRoom();
     }
 }

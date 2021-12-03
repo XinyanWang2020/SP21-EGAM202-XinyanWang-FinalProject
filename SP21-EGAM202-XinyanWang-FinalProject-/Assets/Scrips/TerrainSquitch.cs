@@ -16,6 +16,8 @@ public class TerrainSquitch : MonoBehaviour
         Box_xMax = 100;
     public float Box_Height;
 
+    public float Room_zMin,Room_zMax,Room_xMin,Room_xMax,Room_Height;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -140,6 +142,30 @@ public class TerrainSquitch : MonoBehaviour
         float[,] heights;
         heights = thisTerrain.terrainData.GetHeights(0, 0, heightMapWidth, heightMapHeight);
 
-
+        if (Room_xMax > Room_zMax && Room_zMax < 250)
+        {
+            Vector3 mapPos;
+            for (mapPos.z = 0; mapPos.z < heightMapHeight; mapPos.z++)
+            {
+                for (mapPos.x = 0; mapPos.x < heightMapWidth; mapPos.x++)
+                {
+                    if (mapPos.z > Room_zMin && mapPos.z < Room_zMax && mapPos.x > Room_xMin && mapPos.x < Room_xMax)
+                    {
+                        heights[(int)mapPos.z, (int)mapPos.x] = Room_Height;
+                    }
+                }
+            }
+            for (mapPos.z = 0; mapPos.z < heightMapHeight; mapPos.z++)
+            {
+                for (mapPos.x = 0; mapPos.x < heightMapWidth; mapPos.x++)
+                {
+                    if (mapPos.z > Room_zMin + 50 && mapPos.z < Room_zMax + 50 && mapPos.x > Room_xMin && mapPos.x < Room_xMax)
+                    {
+                        heights[(int)mapPos.z, (int)mapPos.x] = Room_Height;
+                    }
+                }
+            }
+        }
+        thisTerrain.terrainData.SetHeights(0, 0, heights);
     }
 }
