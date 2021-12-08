@@ -17,6 +17,7 @@ public class TerrainSquitch : MonoBehaviour
     public float Box_Height;
 
     public float Room_zMin,Room_zMax,Room_xMin,Room_xMax,Room_Height;
+    private float NewRoom_xMax,NewRoom_xMin,NewRoom_zMax,NewRoom_zMin,NewRoom_Height;
 
     // Start is called before the first frame update
     void Start()
@@ -137,13 +138,26 @@ public class TerrainSquitch : MonoBehaviour
         int heightMapWidth, heightMapHeight;
         heightMapWidth = thisTerrain.terrainData.heightmapResolution;
         heightMapHeight = thisTerrain.terrainData.heightmapResolution;
-        Debug.Log("This Terrain has a heightMap with width=" + heightMapWidth + "and height=" + heightMapHeight);
+        //Debug.Log("This Terrain has a heightMap with width=" + heightMapWidth + "and height=" + heightMapHeight);
 
         float[,] heights;
         heights = thisTerrain.terrainData.GetHeights(0, 0, heightMapWidth, heightMapHeight);
 
-        if (Room_xMax > Room_zMax && Room_zMax < 250)
+        NewRoom_Height = 0;
+
+        // add the colision
+        GameObject RoomColliderObject = new GameObject();
+        RoomColliderObject.AddComponent<BoxCollider>();
+        RoomColliderObject.transform.position = new Vector3((Room_xMin + Room_xMax) / 2, Room_Height, (Room_zMin + Room_zMax) / 2);
+        RoomColliderObject.transform.localScale = new Vector3((Room_xMax - Room_xMin), 500, (Room_zMax - Room_zMin));
+
+        RoomColliderObject.GetComponent<BoxCollider>().isTrigger = true;
+        RoomColliderObject.layer = 7;
+
+        // if the room is horizontal
+        if (Room_xMax > Room_zMax)
         {
+            Debug.Log("1");
             Vector3 mapPos;
             for (mapPos.z = 0; mapPos.z < heightMapHeight; mapPos.z++)
             {
@@ -155,6 +169,18 @@ public class TerrainSquitch : MonoBehaviour
                     }
                 }
             }
+            //add a door
+            for (mapPos.z = 0; mapPos.z < heightMapHeight; mapPos.z++)
+            {
+                for (mapPos.x = 0; mapPos.x < heightMapWidth; mapPos.x++)
+                {
+                    if (mapPos.z > Room_zMin && mapPos.z < Room_zMax && mapPos.x > Room_xMin -20 && mapPos.x < Room_xMax - 20)
+                    {
+                        heights[(int)mapPos.z, (int)mapPos.x] = NewRoom_Height;
+                    }
+                }
+            }
+            // add another wall which is the same
             for (mapPos.z = 0; mapPos.z < heightMapHeight; mapPos.z++)
             {
                 for (mapPos.x = 0; mapPos.x < heightMapWidth; mapPos.x++)
@@ -165,6 +191,100 @@ public class TerrainSquitch : MonoBehaviour
                     }
                 }
             }
+            // Create another wall
+            NewRoom_zMax = Room_zMin + 50;
+            NewRoom_xMin = Room_xMax - 5;
+            for (mapPos.z = 0; mapPos.z < heightMapHeight; mapPos.z++)
+            {
+                for (mapPos.x = 0; mapPos.x < heightMapWidth; mapPos.x++)
+                {
+                    if (mapPos.z > Room_zMin && mapPos.z < NewRoom_zMax && mapPos.x > NewRoom_xMin && mapPos.x < Room_xMax)
+                    {
+                        heights[(int)mapPos.z, (int)mapPos.x] = Room_Height;
+                    }
+                }
+            }
+            // add another wall which is the same
+            NewRoom_xMax = Room_xMax - (Room_xMax - Room_xMin);
+            NewRoom_xMin = NewRoom_xMax - 5;
+            for (mapPos.z = 0; mapPos.z < heightMapHeight; mapPos.z++)
+            {
+                for (mapPos.x = 0; mapPos.x < heightMapWidth; mapPos.x++)
+                {
+                    if (mapPos.z > Room_zMin && mapPos.z < NewRoom_zMax && mapPos.x > NewRoom_xMin && mapPos.x < NewRoom_xMax)
+                    {
+                        heights[(int)mapPos.z, (int)mapPos.x] = Room_Height;
+                    }
+                }
+            }
+
+
+        }
+
+        //if the room is vertical
+        else
+        {
+            Debug.Log("3");
+            Vector3 mapPos;
+            for (mapPos.z = 0; mapPos.z < heightMapHeight; mapPos.z++)
+            {
+                for (mapPos.x = 0; mapPos.x < heightMapWidth; mapPos.x++)
+                {
+                    if (mapPos.z > Room_zMin && mapPos.z < Room_zMax && mapPos.x > Room_xMin && mapPos.x < Room_xMax)
+                    {
+                        heights[(int)mapPos.z, (int)mapPos.x] = Room_Height;
+                    }
+                }
+            }
+            //add a door
+            for (mapPos.z = 0; mapPos.z < heightMapHeight; mapPos.z++)
+            {
+                for (mapPos.x = 0; mapPos.x < heightMapWidth; mapPos.x++)
+                {
+                    if (mapPos.z > Room_zMin - 20 && mapPos.z < Room_zMax - 20 && mapPos.x > Room_xMin  && mapPos.x < Room_xMax )
+                    {
+                        heights[(int)mapPos.z, (int)mapPos.x] = NewRoom_Height;
+                    }
+                }
+            }
+            // add another wall which is the same
+            for (mapPos.z = 0; mapPos.z < heightMapHeight; mapPos.z++)
+            {
+                for (mapPos.x = 0; mapPos.x < heightMapWidth; mapPos.x++)
+                {
+                    if (mapPos.z > Room_zMin && mapPos.z < Room_zMax && mapPos.x > Room_xMin + 50 && mapPos.x < Room_xMax + 50)
+                    {
+                        heights[(int)mapPos.z, (int)mapPos.x] = Room_Height;
+                    }
+                }
+            }
+            // add another wall
+            NewRoom_zMin = Room_zMax - 5;
+            NewRoom_xMax = Room_xMin + 50;
+            for (mapPos.z = 0; mapPos.z < heightMapHeight; mapPos.z++)
+            {
+                for (mapPos.x = 0; mapPos.x < heightMapWidth; mapPos.x++)
+                {
+                    if (mapPos.z > NewRoom_zMin && mapPos.z < Room_zMax && mapPos.x > Room_xMin && mapPos.x < NewRoom_xMax)
+                    {
+                        heights[(int)mapPos.z, (int)mapPos.x] = Room_Height;
+                    }
+                }
+            }
+
+            NewRoom_zMax = Room_zMax - (Room_zMax - Room_zMin);
+            NewRoom_zMin = NewRoom_zMax - 5;
+            for (mapPos.z = 0; mapPos.z < heightMapHeight; mapPos.z++)
+            {
+                for (mapPos.x = 0; mapPos.x < heightMapWidth; mapPos.x++)
+                {
+                    if (mapPos.z > NewRoom_zMin && mapPos.z < NewRoom_zMax && mapPos.x > Room_xMin && mapPos.x < NewRoom_xMax)
+                    {
+                        heights[(int)mapPos.z, (int)mapPos.x] = Room_Height;
+                    }
+                }
+            }
+
         }
         thisTerrain.terrainData.SetHeights(0, 0, heights);
     }
