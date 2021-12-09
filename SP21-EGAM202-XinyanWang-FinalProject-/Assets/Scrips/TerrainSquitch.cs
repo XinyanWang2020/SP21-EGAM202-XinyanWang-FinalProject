@@ -144,12 +144,18 @@ public class TerrainSquitch : MonoBehaviour
         heights = thisTerrain.terrainData.GetHeights(0, 0, heightMapWidth, heightMapHeight);
 
         NewRoom_Height = 0;
+        float Room_zMin_World, Room_zMax_World;
+        float Room_xMin_World, Room_xMax_World;
+        Room_zMin_World =Room_zMin * thisTerrain.terrainData.heightmapScale.z;
+        Room_zMax_World = Room_zMax * thisTerrain.terrainData.heightmapScale.z;
+        Room_xMin_World = Room_xMin * thisTerrain.terrainData.heightmapScale.x;
+        Room_xMax_World = Room_xMax * thisTerrain.terrainData.heightmapScale.x;
 
         // add the colision
         GameObject RoomColliderObject = new GameObject();
         RoomColliderObject.AddComponent<BoxCollider>();
-        RoomColliderObject.transform.position = new Vector3((Room_xMin + Room_xMax) / 2, Room_Height, (Room_zMin + Room_zMax) / 2);
-        RoomColliderObject.transform.localScale = new Vector3((Room_xMax - Room_xMin), 500, (Room_zMax - Room_zMin));
+        RoomColliderObject.transform.position = new Vector3((Room_xMin_World + Room_xMax_World) / 2, Room_Height, (Room_zMin_World + Room_zMax_World) / 2);
+        RoomColliderObject.transform.localScale = new Vector3((Room_xMax_World - Room_xMin_World), 500, (Room_zMax_World - Room_zMin_World));
 
         RoomColliderObject.GetComponent<BoxCollider>().isTrigger = true;
         RoomColliderObject.layer = 7;
