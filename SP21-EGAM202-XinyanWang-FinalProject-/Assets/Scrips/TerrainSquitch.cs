@@ -143,6 +143,7 @@ public class TerrainSquitch : MonoBehaviour
         float[,] heights;
         heights = thisTerrain.terrainData.GetHeights(0, 0, heightMapWidth, heightMapHeight);
 
+        // change the mappos into worldpos
         NewRoom_Height = 0;
         float Room_zMin_World, Room_zMax_World;
         float Room_xMin_World, Room_xMax_World;

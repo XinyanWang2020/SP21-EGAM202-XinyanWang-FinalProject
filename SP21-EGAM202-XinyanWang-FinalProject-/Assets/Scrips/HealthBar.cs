@@ -15,5 +15,8 @@ public class HealthBar : MonoBehaviour
         Hp = MaxHp;
     }
 
-
+    private void Update()
+    {
+        HpImage.fillAmount = Hp / MaxHp;
+    }
 }
