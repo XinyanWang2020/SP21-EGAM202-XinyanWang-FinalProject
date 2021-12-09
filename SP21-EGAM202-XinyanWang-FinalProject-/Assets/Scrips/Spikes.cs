@@ -17,8 +17,9 @@ public class Spikes : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("BabyFish"))
+        if (other.gameObject.tag == "BabyFish")
         {
+            other.GetComponentInChildren<HealthBar>().Hp -= 25;
             Destroy(this.gameObject);
         }
             
