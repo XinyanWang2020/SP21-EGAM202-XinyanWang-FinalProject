@@ -8,7 +8,7 @@ public class HealthBar : MonoBehaviour
     public Image HpImage;
     public float Hp;
 
-    [SerializeField] private float MaxHp;
+    public float MaxHp;
 
     private void Start()
     {

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class Countdown : MonoBehaviour
 {
@@ -30,9 +31,9 @@ public class Countdown : MonoBehaviour
             timer = 0;
             GameTime--;
             GameCountTimeText.text = M + ":" + string.Format("{0:00}", S);
-            if (S <= 0)
+            if (S < 0)
             {
-                //end the game
+                SceneManager.LoadScene("Main");
             }
         }
     }

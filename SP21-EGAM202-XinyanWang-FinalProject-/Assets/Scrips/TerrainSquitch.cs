@@ -19,6 +19,22 @@ public class TerrainSquitch : MonoBehaviour
     public float Room_zMin,Room_zMax,Room_xMin,Room_xMax,Room_Height;
     private float NewRoom_xMax,NewRoom_xMin,NewRoom_zMax,NewRoom_zMin,NewRoom_Height;
 
+    public float NumberOfRooms;
+
+    [Header("Fill Niche Settings")]
+    public Niche FillNiche_Niche;
+    public Niche FillNiche_Niche1;
+    public Niche FillNiche_Niche2;
+    public Transform FillNiche_ParentsTransform;
+    public Transform FillNiche_ParentsTransform1;
+    public Transform FillNiche_ParentsTransform2;
+
+    [Header("Install Water Setting")]
+    public float InstallWater_WaterLevel;
+    public GameObject WaterPrefab;
+    public float WaterPrefabSize;
+    public Transform WaterParent;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -138,7 +154,7 @@ public class TerrainSquitch : MonoBehaviour
         int heightMapWidth, heightMapHeight;
         heightMapWidth = thisTerrain.terrainData.heightmapResolution;
         heightMapHeight = thisTerrain.terrainData.heightmapResolution;
-        //Debug.Log("This Terrain has a heightMap with width=" + heightMapWidth + "and height=" + heightMapHeight);
+        Debug.Log("This Terrain has a heightMap with width=" + heightMapWidth + "and height=" + heightMapHeight);
 
         float[,] heights;
         heights = thisTerrain.terrainData.GetHeights(0, 0, heightMapWidth, heightMapHeight);
@@ -162,137 +178,190 @@ public class TerrainSquitch : MonoBehaviour
         RoomColliderObject.layer = 7;
 
         // if the room is horizontal
-        if (Room_xMax > Room_zMax)
+        Vector3 mapPos;
+        for (mapPos.z = 0; mapPos.z < heightMapHeight; mapPos.z++)
         {
-            Debug.Log("1");
-            Vector3 mapPos;
-            for (mapPos.z = 0; mapPos.z < heightMapHeight; mapPos.z++)
+            for (mapPos.x = 0; mapPos.x < heightMapWidth; mapPos.x++)
             {
-                for (mapPos.x = 0; mapPos.x < heightMapWidth; mapPos.x++)
+                if (mapPos.z > Room_zMin && mapPos.z < Room_zMax && mapPos.x > Room_xMin && mapPos.x < Room_xMax)
                 {
-                    if (mapPos.z > Room_zMin && mapPos.z < Room_zMax && mapPos.x > Room_xMin && mapPos.x < Room_xMax)
-                    {
-                        heights[(int)mapPos.z, (int)mapPos.x] = Room_Height;
-                    }
+                    heights[(int)mapPos.z, (int)mapPos.x] = Room_Height;
                 }
             }
-            //add a door
-            for (mapPos.z = 0; mapPos.z < heightMapHeight; mapPos.z++)
-            {
-                for (mapPos.x = 0; mapPos.x < heightMapWidth; mapPos.x++)
-                {
-                    if (mapPos.z > Room_zMin && mapPos.z < Room_zMax && mapPos.x > Room_xMin -20 && mapPos.x < Room_xMax - 20)
-                    {
-                        heights[(int)mapPos.z, (int)mapPos.x] = NewRoom_Height;
-                    }
-                }
-            }
-            // add another wall which is the same
-            for (mapPos.z = 0; mapPos.z < heightMapHeight; mapPos.z++)
-            {
-                for (mapPos.x = 0; mapPos.x < heightMapWidth; mapPos.x++)
-                {
-                    if (mapPos.z > Room_zMin + 50 && mapPos.z < Room_zMax + 50 && mapPos.x > Room_xMin && mapPos.x < Room_xMax)
-                    {
-                        heights[(int)mapPos.z, (int)mapPos.x] = Room_Height;
-                    }
-                }
-            }
-            // Create another wall
-            NewRoom_zMax = Room_zMin + 50;
-            NewRoom_xMin = Room_xMax - 5;
-            for (mapPos.z = 0; mapPos.z < heightMapHeight; mapPos.z++)
-            {
-                for (mapPos.x = 0; mapPos.x < heightMapWidth; mapPos.x++)
-                {
-                    if (mapPos.z > Room_zMin && mapPos.z < NewRoom_zMax && mapPos.x > NewRoom_xMin && mapPos.x < Room_xMax)
-                    {
-                        heights[(int)mapPos.z, (int)mapPos.x] = Room_Height;
-                    }
-                }
-            }
-            // add another wall which is the same
-            NewRoom_xMax = Room_xMax - (Room_xMax - Room_xMin);
-            NewRoom_xMin = NewRoom_xMax - 5;
-            for (mapPos.z = 0; mapPos.z < heightMapHeight; mapPos.z++)
-            {
-                for (mapPos.x = 0; mapPos.x < heightMapWidth; mapPos.x++)
-                {
-                    if (mapPos.z > Room_zMin && mapPos.z < NewRoom_zMax && mapPos.x > NewRoom_xMin && mapPos.x < NewRoom_xMax)
-                    {
-                        heights[(int)mapPos.z, (int)mapPos.x] = Room_Height;
-                    }
-                }
-            }
-
-
         }
 
-        //if the room is vertical
-        else
+        //Pull middle down
+        for (mapPos.z = 0; mapPos.z < heightMapHeight; mapPos.z++)
         {
-            Debug.Log("3");
-            Vector3 mapPos;
-            for (mapPos.z = 0; mapPos.z < heightMapHeight; mapPos.z++)
+            for (mapPos.x = 0; mapPos.x < heightMapWidth; mapPos.x++)
             {
-                for (mapPos.x = 0; mapPos.x < heightMapWidth; mapPos.x++)
+                if (mapPos.z > Room_zMin + 5 && mapPos.z < Room_zMax - 5 && mapPos.x > Room_xMin + 5 && mapPos.x < Room_xMax - 5)
                 {
-                    if (mapPos.z > Room_zMin && mapPos.z < Room_zMax && mapPos.x > Room_xMin && mapPos.x < Room_xMax)
-                    {
-                        heights[(int)mapPos.z, (int)mapPos.x] = Room_Height;
-                    }
+                    heights[(int)mapPos.z, (int)mapPos.x] = NewRoom_Height;
                 }
             }
-            //add a door
-            for (mapPos.z = 0; mapPos.z < heightMapHeight; mapPos.z++)
-            {
-                for (mapPos.x = 0; mapPos.x < heightMapWidth; mapPos.x++)
-                {
-                    if (mapPos.z > Room_zMin - 20 && mapPos.z < Room_zMax - 20 && mapPos.x > Room_xMin  && mapPos.x < Room_xMax )
-                    {
-                        heights[(int)mapPos.z, (int)mapPos.x] = NewRoom_Height;
-                    }
-                }
-            }
-            // add another wall which is the same
-            for (mapPos.z = 0; mapPos.z < heightMapHeight; mapPos.z++)
-            {
-                for (mapPos.x = 0; mapPos.x < heightMapWidth; mapPos.x++)
-                {
-                    if (mapPos.z > Room_zMin && mapPos.z < Room_zMax && mapPos.x > Room_xMin + 50 && mapPos.x < Room_xMax + 50)
-                    {
-                        heights[(int)mapPos.z, (int)mapPos.x] = Room_Height;
-                    }
-                }
-            }
-            // add another wall
-            NewRoom_zMin = Room_zMax - 5;
-            NewRoom_xMax = Room_xMin + 50;
-            for (mapPos.z = 0; mapPos.z < heightMapHeight; mapPos.z++)
-            {
-                for (mapPos.x = 0; mapPos.x < heightMapWidth; mapPos.x++)
-                {
-                    if (mapPos.z > NewRoom_zMin && mapPos.z < Room_zMax && mapPos.x > Room_xMin && mapPos.x < NewRoom_xMax)
-                    {
-                        heights[(int)mapPos.z, (int)mapPos.x] = Room_Height;
-                    }
-                }
-            }
+        }
 
-            NewRoom_zMax = Room_zMax - (Room_zMax - Room_zMin);
-            NewRoom_zMin = NewRoom_zMax - 5;
-            for (mapPos.z = 0; mapPos.z < heightMapHeight; mapPos.z++)
+        //Push down a piece of wall, to make a door
+        for (mapPos.z = 0; mapPos.z < heightMapHeight; mapPos.z++)
+        {
+            for (mapPos.x = 0; mapPos.x < heightMapWidth; mapPos.x++)
             {
-                for (mapPos.x = 0; mapPos.x < heightMapWidth; mapPos.x++)
+                if (mapPos.z > Room_zMin + 10 && mapPos.z < Room_zMin + 20 && mapPos.x > Room_xMin && mapPos.x < Room_xMin + 10)
                 {
-                    if (mapPos.z > NewRoom_zMin && mapPos.z < NewRoom_zMax && mapPos.x > Room_xMin && mapPos.x < NewRoom_xMax)
-                    {
-                        heights[(int)mapPos.z, (int)mapPos.x] = Room_Height;
-                    }
+                    heights[(int)mapPos.z, (int)mapPos.x] = NewRoom_Height;
                 }
             }
-
         }
         thisTerrain.terrainData.SetHeights(0, 0, heights);
+    }
+
+    public void ManyRooms()
+    {
+        Terrain thisTerrain = GetComponent<Terrain>();
+        if (thisTerrain == null)
+            throw new System.Exception("TerrainSquitch requires a Terrain. Please add a Terrain to " + gameObject.name);
+
+        int heightMapWidth, heightMapHeight,i;
+        heightMapWidth = thisTerrain.terrainData.heightmapResolution;
+        heightMapHeight = thisTerrain.terrainData.heightmapResolution;
+        //Debug.Log("This Terrain has a heightMap with width=" + heightMapWidth + "and height=" + heightMapHeight);
+
+        float[,] heights;
+        heights = thisTerrain.terrainData.GetHeights(0, 0, heightMapWidth, heightMapHeight);
+
+        // change the mappos into worldpos
+        
+        NewRoom_Height = 0;
+        float Room_zMin_World2, Room_zMax_World2;
+        float Room_xMin_World2, Room_xMax_World2;
+        
+        i = 0;
+        while (i < NumberOfRooms)
+        {
+            Debug.Log("create");
+            NewRoom_xMax = Random.Range(150f, 500f);
+            NewRoom_xMin = NewRoom_xMax - Random.Range(100f, 200f);
+            NewRoom_zMax = Random.Range(150f, 500f);
+            NewRoom_zMin = NewRoom_zMax - Random.Range(100f, 200f);
+
+            Room_zMin_World2 = NewRoom_zMin * thisTerrain.terrainData.heightmapScale.z;
+            Room_zMax_World2 = NewRoom_zMax * thisTerrain.terrainData.heightmapScale.z;
+            Room_xMin_World2 = NewRoom_xMin * thisTerrain.terrainData.heightmapScale.x;
+            Room_xMax_World2 = NewRoom_xMax * thisTerrain.terrainData.heightmapScale.x;
+
+
+            Vector3 centerOfBox = new Vector3((Room_xMin_World2 + Room_xMax_World2) / 2, Room_Height, (Room_zMin_World2 + Room_zMax_World2) / 2);
+            Vector3 halfSizeOfBox = new Vector3((Room_xMax_World2 - Room_xMin_World2) / 2, 500 / 2, (Room_zMax_World2 - Room_zMin_World2) / 2);
+
+            // add the colision
+            GameObject RoomColliderObject = new GameObject();
+            RoomColliderObject.AddComponent<BoxCollider>();
+            RoomColliderObject.transform.position = new Vector3((Room_xMin_World2 + Room_xMax_World2) / 2, Room_Height, (Room_zMin_World2 + Room_zMax_World2) / 2);
+            RoomColliderObject.transform.localScale = new Vector3((Room_xMax_World2 - Room_xMin_World2), 500, (Room_zMax_World2 - Room_zMin_World2));
+
+            RoomColliderObject.GetComponent<BoxCollider>().isTrigger = true;
+            RoomColliderObject.layer = 7;
+            i++;
+
+            Vector3 mapPos;
+            if (Physics.CheckBox(centerOfBox, halfSizeOfBox, Quaternion.identity, LayerMask.GetMask("Rooms"), QueryTriggerInteraction.UseGlobal))
+                return;
+            Debug.Log("1");
+            for (mapPos.z = 0; mapPos.z < heightMapHeight; mapPos.z++)
+            {
+                for (mapPos.x = 0; mapPos.x < heightMapWidth; mapPos.x++)
+                {
+                    if (mapPos.z > NewRoom_zMin && mapPos.z < NewRoom_zMax && mapPos.x > NewRoom_xMin && mapPos.x < NewRoom_xMax)
+                    {
+                        heights[(int)mapPos.z, (int)mapPos.x] = Room_Height;
+                    }
+                }
+            }
+
+            //Pull middle down
+            for (mapPos.z = 0; mapPos.z < heightMapHeight; mapPos.z++)
+            {
+                for (mapPos.x = 0; mapPos.x < heightMapWidth; mapPos.x++)
+                {
+                    if (mapPos.z > NewRoom_zMin + 5 && mapPos.z < NewRoom_zMax - 5 && mapPos.x > NewRoom_xMin + 5 && mapPos.x < NewRoom_xMax - 5)
+                    {
+                        heights[(int)mapPos.z, (int)mapPos.x] = NewRoom_Height;
+                    }
+                }
+            }
+
+            //Push down a piece of wall, to make a door
+            for (mapPos.z = 0; mapPos.z < heightMapHeight; mapPos.z++)
+            {
+                for (mapPos.x = 0; mapPos.x < heightMapWidth; mapPos.x++)
+                {
+                    if (mapPos.z > NewRoom_zMin + 10 && mapPos.z < NewRoom_zMin + 30 && mapPos.x > NewRoom_xMin && mapPos.x < NewRoom_xMin + 10)
+                    {
+                        heights[(int)mapPos.z, (int)mapPos.x] = NewRoom_Height;
+                    }
+                }
+            }
+            thisTerrain.terrainData.SetHeights(0, 0, heights);
+        }
+    }
+
+    public void FillNiche()
+    {
+        Terrain thisTerrain = GetComponent<Terrain>();
+        if (thisTerrain == null)
+            throw new System.Exception("TerrainSquitch requires a Terrain. Please add a Terrain to " + gameObject.name);
+
+        int heightMapWidth, heightMapLength;
+        heightMapWidth = thisTerrain.terrainData.heightmapResolution;
+        heightMapLength = thisTerrain.terrainData.heightmapResolution;
+        Debug.Log("This Terrain has a heightMap with width=" + heightMapWidth + "and height=" + heightMapLength);
+
+        //knowing the size of the Terrain, in worlds units
+        float heightMapWidthInWorld, heightMapLengthInWorld;
+        heightMapWidthInWorld = heightMapWidth * thisTerrain.terrainData.heightmapScale.x;
+        heightMapLengthInWorld = heightMapLength * thisTerrain.terrainData.heightmapScale.z;
+
+        //using worldPos
+        Vector3 worldPos;
+        worldPos = new Vector3(0, InstallWater_WaterLevel, 0);
+        for (worldPos.z = 0; worldPos.z < heightMapLengthInWorld; worldPos.z += 1)
+        {
+            for (worldPos.x = 0; worldPos.x < heightMapWidthInWorld; worldPos.x += 1)
+            {
+                worldPos.y = thisTerrain.SampleHeight(worldPos);
+                //check x, z, elevation
+                if (worldPos.x > FillNiche_Niche.MinX && worldPos.x < FillNiche_Niche.MaxX &&
+                    worldPos.z > FillNiche_Niche.MinZ && worldPos.z < FillNiche_Niche.MaxZ &&
+                    worldPos.y > FillNiche_Niche.MinElve && worldPos.y < FillNiche_Niche.MaxElev)
+                {
+                    //Draw a random number, and instantiate
+                    if (Random.value < FillNiche_Niche.ProbabilityPerHeter)
+                    {
+                        Instantiate(FillNiche_Niche.NicheOccupant, worldPos, Quaternion.identity, FillNiche_ParentsTransform);
+                    }
+                }
+                /*if (worldPos.x > FillNiche_Niche1.MinX && worldPos.x < FillNiche_Niche1.MaxX &&
+                   worldPos.z > FillNiche_Niche1.MinZ && worldPos.z < FillNiche_Niche1.MaxZ &&
+                   worldPos.y > FillNiche_Niche1.MinElve && worldPos.y < FillNiche_Niche1.MaxElev)
+                {
+                    //Draw a random number, and instantiate
+                    if (Random.value < FillNiche_Niche1.ProbabilityPerHeter)
+                    {
+                        Instantiate(FillNiche_Niche1.NicheOccupant, worldPos, Quaternion.identity, FillNiche_ParentsTransform1);
+                    }
+                }
+                if (worldPos.x > FillNiche_Niche2.MinX && worldPos.x < FillNiche_Niche2.MaxX &&
+                   worldPos.z > FillNiche_Niche2.MinZ && worldPos.z < FillNiche_Niche2.MaxZ &&
+                   worldPos.y > FillNiche_Niche2.MinElve && worldPos.y < FillNiche_Niche2.MaxElev)
+                {
+                    //Draw a random number, and instantiate
+                    if (Random.value < FillNiche_Niche2.ProbabilityPerHeter)
+                    {
+                        Instantiate(FillNiche_Niche2.NicheOccupant, worldPos, Quaternion.identity, FillNiche_ParentsTransform2);
+                    }
+                }*/
+            }
+        }
     }
 }

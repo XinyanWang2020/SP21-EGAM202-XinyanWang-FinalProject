@@ -23,5 +23,11 @@ public class TerrainSquitch_Editor : Editor
 
         if (GUILayout.Button("Single Room"))
             squitch.SingleRoom();
+
+        if (GUILayout.Button("Many Rooms"))
+            squitch.ManyRooms();
+
+        if (GUILayout.Button("Fill Niche"))
+            squitch.FillNiche();
     }
 }
