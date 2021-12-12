@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class TerrainSquitch : MonoBehaviour
 {
@@ -160,13 +161,19 @@ public class TerrainSquitch : MonoBehaviour
         heights = thisTerrain.terrainData.GetHeights(0, 0, heightMapWidth, heightMapHeight);
 
         // change the mappos into worldpos
-        NewRoom_Height = 0;
+        NewRoom_Height = 0.1f;
         float Room_zMin_World, Room_zMax_World;
         float Room_xMin_World, Room_xMax_World;
         Room_zMin_World =Room_zMin * thisTerrain.terrainData.heightmapScale.z;
         Room_zMax_World = Room_zMax * thisTerrain.terrainData.heightmapScale.z;
         Room_xMin_World = Room_xMin * thisTerrain.terrainData.heightmapScale.x;
         Room_xMax_World = Room_xMax * thisTerrain.terrainData.heightmapScale.x;
+
+        Vector3 centerOfBox = new Vector3((Room_xMin_World + Room_xMax_World) / 2, Room_Height, (Room_zMin_World + Room_zMax_World) / 2);
+        Vector3 halfSizeOfBox = new Vector3((Room_xMax_World - Room_xMin_World) / 2, 500 / 2, (Room_zMax_World - Room_zMin_World) / 2);
+
+        if (Physics.CheckBox(centerOfBox, halfSizeOfBox, Quaternion.identity, LayerMask.GetMask("Rooms"), QueryTriggerInteraction.UseGlobal))
+            return;
 
         // add the colision
         GameObject RoomColliderObject = new GameObject();
@@ -176,6 +183,8 @@ public class TerrainSquitch : MonoBehaviour
 
         RoomColliderObject.GetComponent<BoxCollider>().isTrigger = true;
         RoomColliderObject.layer = 7;
+
+
 
         // if the room is horizontal
         Vector3 mapPos;
@@ -303,7 +312,25 @@ public class TerrainSquitch : MonoBehaviour
                 }
             }
             thisTerrain.terrainData.SetHeights(0, 0, heights);
+            GetComponent<UnityEngine.AI.NavMeshSurface>().BuildNavMesh();
         }
+    }
+
+    public void ManyRooms2()
+    {
+        float i;
+        i = 0;
+        while (i < NumberOfRooms)
+        {
+            Room_xMax = Random.Range(150f, 500f);
+            Room_xMin = Room_xMax - Random.Range(100f, 200f);
+            Room_zMax = Random.Range(150f, 500f);
+            Room_zMin = Room_zMax - Random.Range(100f, 200f);
+
+            SingleRoom();
+            i++;
+        }
+        GetComponent<UnityEngine.AI.NavMeshSurface>().BuildNavMesh();
     }
 
     public void FillNiche()

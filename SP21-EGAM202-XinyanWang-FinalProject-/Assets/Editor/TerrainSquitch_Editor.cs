@@ -29,5 +29,8 @@ public class TerrainSquitch_Editor : Editor
 
         if (GUILayout.Button("Fill Niche"))
             squitch.FillNiche();
+
+        if (GUILayout.Button("Many Rooms2"))
+            squitch.ManyRooms2();
     }
 }

@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class BabyFishBrain : MonoBehaviour
 
 {
+    public Animator anim;
     public enum BabyFishStateT
     {
         DecidingWhatToDoNext,
@@ -28,6 +30,8 @@ public class BabyFishBrain : MonoBehaviour
     public BabyFishStateT currentState;
 
     NavMeshAgent thisNavMeshAgent;
+
+    public Text GameEndText;
     void Start()
     {
         
@@ -55,13 +59,22 @@ public class BabyFishBrain : MonoBehaviour
 
         if (Food < 0 || Water < 0 || CurrentHealth <= 0)
         {
-            Destroy(this.gameObject);
+
+            Destroy(this.gameObject,3f);
             SceneManager.LoadScene("Main");
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
         //if it is weak
         if(Food < 20 || Water <20)
         {
+            moveSpeed = 0.3f;
+            anim.SetTrigger("Weak");
+        }
+        if (Food > 20 && Water > 20)
+        {
             moveSpeed = 0.5f;
+            anim.SetTrigger("Normal");
+            anim.ResetTrigger("Weak");
         }
 
         switch(currentState)
@@ -77,12 +90,12 @@ public class BabyFishBrain : MonoBehaviour
             //case BabyFishStateT.Struggling:
                 //Struggling();
                 //break;
-                //case BabyFishStateT.SeekingSpikes:
-                //SeekingSpikes();
-                //break;
+                case BabyFishStateT.SeekingSpikes:
+                SeekingSpikes();
+                break;
 
-                //case BabyFishStateT.MovingToSpikes:
-                //break;
+                case BabyFishStateT.MovingToSpikes:
+                break;
         }
     }
     public void DecideWhatToDoNext()
@@ -93,11 +106,11 @@ public class BabyFishBrain : MonoBehaviour
             return;
         }
 
-        /*if (DistanceToPlayer > SeekingDistance)
+        if (DistanceToPlayer > SeekingDistance)
         {
             currentState = BabyFishStateT.SeekingSpikes;
             return;
-        }*/
+        }
 
     }
 
@@ -106,31 +119,31 @@ public class BabyFishBrain : MonoBehaviour
         Vector3 dir = player .transform.position - transform.position;
         //Debug.Log("run");
         // if the player is on the back
-        if (Vector3.Dot(transform.forward, player.transform.position) > 0)
+        if (player.transform.position.z < transform.position.z)
         {
             Debug.Log("1");
-            transform.position = transform.position + new Vector3(0,1f * moveSpeed,1);
+            transform.position = transform.position + new Vector3(0,0.8f * moveSpeed,1);
         }
 
         // if the player is on the front
-        else if (Vector3.Dot(transform.forward,dir) > 0)
+        if (player.transform.position.z > transform .position .z)
         {
             Debug.Log("2");
-            transform.position = transform.position + new Vector3(0, 1f * moveSpeed, -1);
+            transform.position = transform.position + new Vector3(0, 0.8f * moveSpeed, -1);
         }
         //if the player is on the left
-        if (Vector3.Cross(transform.forward, player .transform.position).y > 0)
+        if (player.transform.position.x < transform.position.x)
         {
             Debug.Log("3");
             transform.position = transform.position + new Vector3(1f * moveSpeed, 0, 0);
         }
         //if the player is on the right
-        else if (Vector3.Cross(transform.forward, player.transform.position).x <= 0)
+        if (player.transform.position.x > transform.position.x)
         {
             Debug.Log("4");
             transform.position = transform.position + new Vector3(-1f * moveSpeed, 0, 0);
         }
-        //transform.position = transform.position + new Vector3(-1f * moveSpeed, 0, 0);
+
         if (DistanceToPlayer > SeekingDistance)
         {
             currentState = BabyFishStateT.DecidingWhatToDoNext;
@@ -142,7 +155,16 @@ public class BabyFishBrain : MonoBehaviour
         Debug.Log("seeking spikes");
         GameObject targetSpikes = FindClosestObjectWithTag("Spikes");
         thisNavMeshAgent.SetDestination(targetSpikes.transform.position);
-        currentState = BabyFishStateT.MovingToSpikes;
+        currentState = BabyFishStateT.MovingToSpikes; 
+        if (DistanceToPlayer < SeekingDistance)
+        {
+            currentState = BabyFishStateT.RunAway;
+        }
+    }
+
+    public void MovingToSpikes()
+    {
+        Debug.Log("moving to spikes");
         if (DistanceToPlayer < SeekingDistance)
         {
             currentState = BabyFishStateT.RunAway;
@@ -159,6 +181,11 @@ public class BabyFishBrain : MonoBehaviour
             babyfish.gameObject.transform.SetParent(other.transform);
             babyfish.gameObject.transform.localPosition = new Vector3(0, 25, 1);
             StartCoroutine(Count());
+        }
+
+        if (currentState == BabyFishStateT.MovingToSpikes && other.gameObject.tag == "Spikes")
+        {
+            currentState = BabyFishStateT.DecidingWhatToDoNext;
         }
     }
 

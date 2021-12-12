@@ -19,4 +19,4 @@ MonoBehaviour:
   MaxZ: 1000
   MaxElev: 500
   MinElve: 50
-  ProbabilityPerHeter: 0.000001
+  ProbabilityPerHeter: 0.00001
