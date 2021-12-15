@@ -95,6 +95,7 @@ public class BabyFishBrain : MonoBehaviour
                 break;
 
                 case BabyFishStateT.MovingToSpikes:
+                MovingToSpikes();
                 break;
         }
     }
@@ -122,14 +123,14 @@ public class BabyFishBrain : MonoBehaviour
         if (player.transform.position.z < transform.position.z)
         {
             Debug.Log("1");
-            transform.position = transform.position + new Vector3(0,0.8f * moveSpeed,1);
+            transform.position = transform.position + new Vector3(0,0.5f * moveSpeed,1);
         }
 
         // if the player is on the front
         if (player.transform.position.z > transform .position .z)
         {
             Debug.Log("2");
-            transform.position = transform.position + new Vector3(0, 0.8f * moveSpeed, -1);
+            transform.position = transform.position + new Vector3(0, 0.5f * moveSpeed, -1);
         }
         //if the player is on the left
         if (player.transform.position.x < transform.position.x)
