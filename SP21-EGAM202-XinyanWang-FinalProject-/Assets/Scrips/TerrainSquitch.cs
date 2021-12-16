@@ -376,6 +376,26 @@ public class TerrainSquitch : MonoBehaviour
                         Instantiate(FillNiche_Niche.NicheOccupant, worldPos, Quaternion.identity, FillNiche_ParentsTransform);
                     }
                 }
+                if (worldPos.x > FillNiche_Niche1.MinX && worldPos.x < FillNiche_Niche1.MaxX &&
+                   worldPos.z > FillNiche_Niche1.MinZ && worldPos.z < FillNiche_Niche1.MaxZ &&
+                   worldPos.y > FillNiche_Niche1.MinElve && worldPos.y < FillNiche_Niche1.MaxElev)
+                {
+                    //Draw a random number, and instantiate
+                    if (Random.value < FillNiche_Niche1.ProbabilityPerHeter)
+                    {
+                        Instantiate(FillNiche_Niche1.NicheOccupant, worldPos, Quaternion.identity, FillNiche_ParentsTransform1);
+                    }
+                }
+                if (worldPos.x > FillNiche_Niche2.MinX && worldPos.x < FillNiche_Niche2.MaxX &&
+                   worldPos.z > FillNiche_Niche2.MinZ && worldPos.z < FillNiche_Niche2.MaxZ &&
+                   worldPos.y > FillNiche_Niche2.MinElve && worldPos.y < FillNiche_Niche2.MaxElev)
+                {
+                    //Draw a random number, and instantiate
+                    if (Random.value < FillNiche_Niche2.ProbabilityPerHeter)
+                    {
+                        Instantiate(FillNiche_Niche2.NicheOccupant, worldPos, Quaternion.identity, FillNiche_ParentsTransform2);
+                    }
+                }
             }
         }
     }

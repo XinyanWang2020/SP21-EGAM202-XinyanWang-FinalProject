@@ -105,7 +105,7 @@ public class AvatarController : MonoBehaviour
             else
                 Debug.Log("You can't use an item, because you're not holding anything.");
         }
-        if (Input.GetKeyDown(KeyCode.W))
+        if (Input.GetKeyDown(KeyCode.UpArrow))
         {
             //if holding item, try to wear it.
             if (Inventory[currentItemIndex] != null)
@@ -121,7 +121,7 @@ public class AvatarController : MonoBehaviour
             else
                 Debug.Log("You can't eat an item, because you're not holding anything.");
         }
-        if (Input.GetKeyDown(KeyCode.UpArrow))
+        if (Input.GetKeyDown(KeyCode.W))
         {
             //if holding an item, deactivate it.
             if (Inventory[currentItemIndex] != null)
@@ -143,7 +143,7 @@ public class AvatarController : MonoBehaviour
             else
                 Debug.Log("You're now holding nothing.");
         }
-        if (Input.GetKeyDown(KeyCode.DownArrow))
+        if (Input.GetKeyDown(KeyCode.S))
         {
             //if holding an item, deactivate it.
             if (Inventory[currentItemIndex] != null)
