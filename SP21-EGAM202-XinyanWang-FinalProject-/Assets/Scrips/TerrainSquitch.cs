@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.SceneManagement;
 
 public class TerrainSquitch : MonoBehaviour
 {
@@ -39,7 +40,7 @@ public class TerrainSquitch : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     List<Vector2> GenerateNeighbours(Vector2 pos, int width, int height)
@@ -62,7 +63,14 @@ public class TerrainSquitch : MonoBehaviour
     }
     void Update()
     {
-        
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            RestLevel();
+        }
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            Exit();
+        }
     }
 
     public void RandomWalkProfile()
@@ -176,13 +184,13 @@ public class TerrainSquitch : MonoBehaviour
             return;
 
         // add the colision
-        GameObject RoomColliderObject = new GameObject();
+        /*GameObject RoomColliderObject = new GameObject();
         RoomColliderObject.AddComponent<BoxCollider>();
         RoomColliderObject.transform.position = new Vector3((Room_xMin_World + Room_xMax_World) / 2, Room_Height, (Room_zMin_World + Room_zMax_World) / 2);
         RoomColliderObject.transform.localScale = new Vector3((Room_xMax_World - Room_xMin_World), 500, (Room_zMax_World - Room_zMin_World));
 
         RoomColliderObject.GetComponent<BoxCollider>().isTrigger = true;
-        RoomColliderObject.layer = 7;
+        RoomColliderObject.layer = 7;*/
 
 
 
@@ -216,7 +224,7 @@ public class TerrainSquitch : MonoBehaviour
         {
             for (mapPos.x = 0; mapPos.x < heightMapWidth; mapPos.x++)
             {
-                if (mapPos.z > Room_zMin + 10 && mapPos.z < Room_zMin + 20 && mapPos.x > Room_xMin && mapPos.x < Room_xMin + 10)
+                if (mapPos.z > Room_zMin + 50 && mapPos.z < Room_zMin + 60 && mapPos.x > Room_xMin && mapPos.x < Room_xMin + 50)
                 {
                     heights[(int)mapPos.z, (int)mapPos.x] = NewRoom_Height;
                 }
@@ -264,13 +272,13 @@ public class TerrainSquitch : MonoBehaviour
             Vector3 halfSizeOfBox = new Vector3((Room_xMax_World2 - Room_xMin_World2) / 2, 500 / 2, (Room_zMax_World2 - Room_zMin_World2) / 2);
 
             // add the colision
-            GameObject RoomColliderObject = new GameObject();
+           /* GameObject RoomColliderObject = new GameObject();
             RoomColliderObject.AddComponent<BoxCollider>();
             RoomColliderObject.transform.position = new Vector3((Room_xMin_World2 + Room_xMax_World2) / 2, Room_Height, (Room_zMin_World2 + Room_zMax_World2) / 2);
             RoomColliderObject.transform.localScale = new Vector3((Room_xMax_World2 - Room_xMin_World2), 500, (Room_zMax_World2 - Room_zMin_World2));
 
             RoomColliderObject.GetComponent<BoxCollider>().isTrigger = true;
-            RoomColliderObject.layer = 7;
+            RoomColliderObject.layer = 7;*/
             i++;
 
             Vector3 mapPos;
@@ -368,27 +376,33 @@ public class TerrainSquitch : MonoBehaviour
                         Instantiate(FillNiche_Niche.NicheOccupant, worldPos, Quaternion.identity, FillNiche_ParentsTransform);
                     }
                 }
-                /*if (worldPos.x > FillNiche_Niche1.MinX && worldPos.x < FillNiche_Niche1.MaxX &&
-                   worldPos.z > FillNiche_Niche1.MinZ && worldPos.z < FillNiche_Niche1.MaxZ &&
-                   worldPos.y > FillNiche_Niche1.MinElve && worldPos.y < FillNiche_Niche1.MaxElev)
-                {
-                    //Draw a random number, and instantiate
-                    if (Random.value < FillNiche_Niche1.ProbabilityPerHeter)
-                    {
-                        Instantiate(FillNiche_Niche1.NicheOccupant, worldPos, Quaternion.identity, FillNiche_ParentsTransform1);
-                    }
-                }
-                if (worldPos.x > FillNiche_Niche2.MinX && worldPos.x < FillNiche_Niche2.MaxX &&
-                   worldPos.z > FillNiche_Niche2.MinZ && worldPos.z < FillNiche_Niche2.MaxZ &&
-                   worldPos.y > FillNiche_Niche2.MinElve && worldPos.y < FillNiche_Niche2.MaxElev)
-                {
-                    //Draw a random number, and instantiate
-                    if (Random.value < FillNiche_Niche2.ProbabilityPerHeter)
-                    {
-                        Instantiate(FillNiche_Niche2.NicheOccupant, worldPos, Quaternion.identity, FillNiche_ParentsTransform2);
-                    }
-                }*/
             }
         }
+    }
+
+    public void RestLevel()
+    {
+        SceneManager.LoadScene("Main");
+
+        Transform ParentForDeletion;
+        ParentForDeletion = GameObject.Find("HolderOfAll").transform;
+        for(int childi = 0; childi < ParentForDeletion.childCount; childi++)
+        {
+            Destroy(ParentForDeletion.GetChild(childi).gameObject, 0.1f);
+        }
+
+        SetElevation_Elevation = 0;
+        SetElevation();
+        SetElevation_Elevation = .1f;
+        SetElevation();
+        ManyRooms2();
+        FillNiche();
+
+        GetComponent<NavMeshSurface>().BuildNavMesh();
+    }
+
+    public void Exit()
+    {
+        Application.Quit();
     }
 }

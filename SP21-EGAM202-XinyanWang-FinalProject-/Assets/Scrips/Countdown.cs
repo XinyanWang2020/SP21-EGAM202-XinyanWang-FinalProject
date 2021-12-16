@@ -21,6 +21,7 @@ public class Countdown : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+ 
         Clock.fillAmount = GameTime / CountDownTime;
         int M = (int)(GameTime / 60);
         float S = GameTime % 60;
@@ -33,8 +34,9 @@ public class Countdown : MonoBehaviour
             GameCountTimeText.text = M + ":" + string.Format("{0:00}", S);
             if (S < 0)
             {
-                SceneManager.LoadScene("Main");
+                SceneManager.LoadScene("MainMenu");
             }
         }
     }
+
 }

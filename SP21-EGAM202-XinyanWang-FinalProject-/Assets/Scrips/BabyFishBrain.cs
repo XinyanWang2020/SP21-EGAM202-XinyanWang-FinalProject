@@ -67,7 +67,7 @@ public class BabyFishBrain : MonoBehaviour
         //if it is weak
         if(Food < 20 || Water <20)
         {
-            moveSpeed = 0.3f;
+            moveSpeed = 0.1f;
             anim.SetTrigger("Weak");
         }
         if (Food > 20 && Water > 20)
@@ -122,27 +122,27 @@ public class BabyFishBrain : MonoBehaviour
         // if the player is on the back
         if (player.transform.position.z < transform.position.z)
         {
-            Debug.Log("1");
+            //Debug.Log("1");
             transform.position = transform.position + new Vector3(0,0.5f * moveSpeed,1);
         }
 
         // if the player is on the front
         if (player.transform.position.z > transform .position .z)
         {
-            Debug.Log("2");
+            //Debug.Log("2");
             transform.position = transform.position + new Vector3(0, 0.5f * moveSpeed, -1);
         }
         //if the player is on the left
         if (player.transform.position.x < transform.position.x)
         {
-            Debug.Log("3");
-            transform.position = transform.position + new Vector3(1f * moveSpeed, 0, 0);
+            //Debug.Log("3");
+            transform.position = transform.position + new Vector3(0.5f * moveSpeed, 0, 0);
         }
         //if the player is on the right
         if (player.transform.position.x > transform.position.x)
         {
-            Debug.Log("4");
-            transform.position = transform.position + new Vector3(-1f * moveSpeed, 0, 0);
+            //Debug.Log("4");
+            transform.position = transform.position + new Vector3(-0.5f * moveSpeed, 0, 0);
         }
 
         if (DistanceToPlayer > SeekingDistance)
@@ -153,7 +153,7 @@ public class BabyFishBrain : MonoBehaviour
 
     public void SeekingSpikes()
     {
-        Debug.Log("seeking spikes");
+        //Debug.Log("seeking spikes");
         GameObject targetSpikes = FindClosestObjectWithTag("Spikes");
         thisNavMeshAgent.SetDestination(targetSpikes.transform.position);
         currentState = BabyFishStateT.MovingToSpikes; 
@@ -165,7 +165,7 @@ public class BabyFishBrain : MonoBehaviour
 
     public void MovingToSpikes()
     {
-        Debug.Log("moving to spikes");
+        //Debug.Log("moving to spikes");
         if (DistanceToPlayer < SeekingDistance)
         {
             currentState = BabyFishStateT.RunAway;

@@ -77,7 +77,7 @@ public class AvatarController : MonoBehaviour
                     //then, pick up the first overlapping item
                     Inventory[currentItemIndex] = overlappingItems[0].GetComponent<Item>();
                     Inventory[currentItemIndex].transform.SetParent(gameObject.transform);
-                    Inventory[currentItemIndex].transform.localPosition = new Vector3(0, 25, 1);
+                    Inventory[currentItemIndex].transform.localPosition = new Vector3(0, 35, 1);
                     Debug.Log("You picked up a " + Inventory[currentItemIndex].name);
                 }
             }
