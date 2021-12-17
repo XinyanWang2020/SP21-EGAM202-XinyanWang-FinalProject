@@ -338,7 +338,6 @@ public class TerrainSquitch : MonoBehaviour
             SingleRoom();
             i++;
         }
-        GetComponent<UnityEngine.AI.NavMeshSurface>().BuildNavMesh();
     }
 
     public void FillNiche()
@@ -402,7 +401,6 @@ public class TerrainSquitch : MonoBehaviour
 
     public void RestLevel()
     {
-        SceneManager.LoadScene("Main");
 
         Transform ParentForDeletion;
         ParentForDeletion = GameObject.Find("HolderOfAll").transform;
@@ -415,9 +413,11 @@ public class TerrainSquitch : MonoBehaviour
         SetElevation();
         SetElevation_Elevation = .1f;
         SetElevation();
-        ManyRooms2();
         FillNiche();
+        ManyRooms2();
 
+        GetComponent<NavMeshSurface>().BuildNavMesh();
+        SceneManager.LoadScene("Main");
         GetComponent<NavMeshSurface>().BuildNavMesh();
     }
 
