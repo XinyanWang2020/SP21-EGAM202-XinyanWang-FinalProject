@@ -40,7 +40,7 @@ public class TerrainSquitch : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        RestLevel();
     }
 
     List<Vector2> GenerateNeighbours(Vector2 pos, int width, int height)
@@ -65,7 +65,7 @@ public class TerrainSquitch : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.R))
         {
-            RestLevel();
+            SceneManager.LoadScene("MainMenu");
         }
         if (Input.GetKeyDown(KeyCode.Q))
         {
@@ -416,8 +416,6 @@ public class TerrainSquitch : MonoBehaviour
         FillNiche();
         ManyRooms2();
 
-        GetComponent<NavMeshSurface>().BuildNavMesh();
-        SceneManager.LoadScene("Main");
         GetComponent<NavMeshSurface>().BuildNavMesh();
     }
 

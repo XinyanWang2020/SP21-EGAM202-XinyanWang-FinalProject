@@ -137,7 +137,7 @@ public class AvatarController : MonoBehaviour
             if (Inventory[currentItemIndex] != null)
             {
                 Inventory[currentItemIndex].gameObject.SetActive(true);
-                Inventory[currentItemIndex].transform.localPosition = new Vector3(0, 25, 1);
+                Inventory[currentItemIndex].transform.localPosition = new Vector3(0, 35, 1);
                 Debug.Log("You're now holding a" + Inventory[currentItemIndex].name);
             }
             else
@@ -159,7 +159,7 @@ public class AvatarController : MonoBehaviour
             if (Inventory[currentItemIndex] != null)
             {
                 Inventory[currentItemIndex].gameObject.SetActive(true);
-                Inventory[currentItemIndex].transform.localPosition = new Vector3(0, 25, 1);
+                Inventory[currentItemIndex].transform.localPosition = new Vector3(0, 35, 1);
                 Debug.Log("You are now holding a" + Inventory[currentItemIndex].name);
             }
             else

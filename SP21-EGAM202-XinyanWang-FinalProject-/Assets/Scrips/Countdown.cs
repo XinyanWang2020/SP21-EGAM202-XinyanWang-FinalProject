@@ -34,7 +34,7 @@ public class Countdown : MonoBehaviour
             GameCountTimeText.text = M + ":" + string.Format("{0:00}", S);
             if (S < 0)
             {
-                SceneManager.LoadScene("MainMenu");
+                SceneManager.LoadScene("End");
             }
         }
     }
